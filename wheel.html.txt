@@ -1,0 +1,412 @@
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>幸運轉盤 · 抽好禮</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%234a0e14'/%3E%3Ccircle cx='32' cy='32' r='30' fill='none' stroke='%23e8c15a' stroke-width='3'/%3E%3Cpath d='M32 32 L32 4 A28 28 0 0 1 56 20 Z' fill='%23e8c15a'/%3E%3Cpath d='M32 32 L56 44 A28 28 0 0 1 18 56 Z' fill='%238a1f24'/%3E%3Ccircle cx='32' cy='32' r='6' fill='%23e8c15a'/%3E%3C/svg%3E">
+<style>
+:root{
+--bg-deep:#2a080c;
+--bg-wine:#3d0d13;
+--bg-wine2:#4a121a;
+--gold:#e8c15a;
+--gold-deep:#b98a2e;
+--gold-pale:#f4dfa0;
+--cream:#f7ecd7;
+--ink:#1f0609;
+--shadow:0 18px 50px rgba(0,0,0,.55);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei","Heiti TC",sans-serif;
+background:
+radial-gradient(120% 80% at 50% -10%, #5a1520 0%, var(--bg-wine) 45%, var(--bg-deep) 100%);
+color:var(--cream);
+min-height:100vh;
+min-height:100dvh;
+display:flex;
+flex-direction:column;
+align-items:center;
+padding:20px 16px 32px;
+overflow-x:hidden;
+}
+/* ---------- 頂部標題 ---------- */
+header{text-align:center;margin-top:6px}
+.eyebrow{
+font-size:12px;letter-spacing:.5em;color:var(--gold);
+text-transform:uppercase;margin-bottom:8px;text-indent:.5em;
+}
+h1{
+font-size:26px;font-weight:800;letter-spacing:.12em;color:var(--gold-pale);
+text-shadow:0 2px 0 rgba(0,0,0,.35);
+}
+.divider{
+width:120px;height:14px;margin:12px auto 0;position:relative;
+}
+.divider::before,.divider::after{
+content:"";position:absolute;top:6px;height:1px;background:var(--gold-deep);width:42%;
+}
+.divider::before{left:0}
+.divider::after{right:0}
+.divider span{
+position:absolute;left:50%;top:50%;width:8px;height:8px;transform:translate(-50%,-50%) rotate(45deg);
+background:var(--gold);
+}/* ---------- 轉盤區 ---------- */
+.stage{
+position:relative;
+width:min(92vw, 420px);
+margin-top:22px;
+}
+@media (min-width:768px){
+.stage{width:440px;margin-top:28px}
+h1{font-size:32px}
+}
+.wheel-wrap{
+position:relative;width:100%;aspect-ratio:1/1;
+}
+/* 外框金圈 */
+.rim{
+position:absolute;inset:0;border-radius:50%;
+background:
+radial-gradient(circle at 50% 42%, #5c1820 0%, #3a0b11 70%, #2a070b 100%);
+box-shadow:var(--shadow), inset 0 0 0 6px var(--gold-deep), inset 0 0 0 10px #2a070b, inset 0 0 0 12px var(--gold);
+}
+#wheel{
+position:absolute;inset:2.5%;
+border-radius:50%;
+display:block;
+filter:drop-shadow(0 6px 14px rgba(0,0,0,.45));
+}
+/* 頂部指標 */
+.pointer{
+position:absolute;top:-14px;left:50%;transform:translateX(-50%);
+width:0;height:0;z-index:5;
+border-left:16px solid transparent;
+border-right:16px solid transparent;
+border-top:30px solid var(--gold);
+filter:drop-shadow(0 3px 4px rgba(0,0,0,.5));
+}
+.pointer::after{
+content:"";position:absolute;left:-8px;top:-32px;
+border-left:8px solid transparent;border-right:8px solid transparent;
+border-top:14px solid var(--cream);
+}
+/* 中央按鈕 */
+.hub{
+position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+width:88px;height:88px;border-radius:50%;z-index:4;
+border:3px solid var(--gold);
+background:radial-gradient(circle at 50% 35%, #6a1a22 0%, #3d0d13 80%);
+color:var(--gold-pale);font-weight:800;font-size:15px;letter-spacing:.1em;
+cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;
+gap:2px;box-shadow:0 6px 16px rgba(0,0,0,.5);
+font-family:inherit;
+}
+.hub:active{transform:translate(-50%,-50%) scale(.96)}
+.hub:disabled{opacity:.7;cursor:not-allowed}
+.hub svg{width:22px;height:22px;fill:var(--gold)}
+
+/* ---------- 下方 CTA ---------- */
+.cta{
+margin-top:26px;width:min(92vw,420px);
+}
+.spin-btn{
+width:100%;min-height:52px;border:none;border-radius:999px;
+background:linear-gradient(180deg, var(--gold-pale) 0%, var(--gold) 55%, var(--gold-deep) 100%);
+color:var(--ink);font-size:18px;font-weight:800;letter-spacing:.25em;text-indent:.25em;
+cursor:pointer;font-family:inherit;
+box-shadow:0 8px 20px rgba(232,193,90,.25), inset 0 -3px 0 rgba(0,0,0,.18);
+}
+.spin-btn:active{transform:translateY(1px)}
+.spin-btn:disabled{filter:grayscale(.4) brightness(.75);cursor:not-allowed}
+.hint{
+text-align:center;margin-top:12px;font-size:12px;color:rgba(247,236,215,.6);letter-spacing:.2em;
+}
+
+/* ---------- 中獎彈窗 ---------- */
+.overlay{
+position:fixed;inset:0;background:rgba(15,3,5,.78);
+display:flex;align-items:center;justify-content:center;padding:24px;
+opacity:0;pointer-events:none;transition:opacity .25s ease;z-index:50;
+}
+.overlay.show{opacity:1;pointer-events:auto}
+.modal{
+width:100%;max-width:340px;
+background:linear-gradient(180deg,#4a121a 0%,#2a080c 100%);
+border:2px solid var(--gold);border-radius:18px;
+padding:30px 24px 26px;text-align:center;
+box-shadow:var(--shadow);
+transform:translateY(12px) scale(.96);transition:transform .25s ease;
+}
+.overlay.show .modal{transform:translateY(0) scale(1)}
+.modal .badge{
+width:52px;height:52px;margin:0 auto 12px;
+}
+.modal h2{
+font-size:15px;letter-spacing:.4em;color:var(--gold);font-weight:700;text-indent:.4em;
+}
+.modal .prize{
+margin:14px 0 4px;font-size:30px;font-weight:900;color:var(--gold-pale);
+letter-spacing:.08em;line-height:1.2;
+word-break:break-all;
+}
+.modal .prize-sub{font-size:13px;color:rgba(247,236,215,.7);margin-bottom:22px;letter-spacing:.1em}
+.modal-actions{display:flex;gap:10px}
+.modal-actions button{
+flex:1;min-height:48px;border-radius:999px;font-family:inherit;
+font-size:15px;font-weight:700;letter-spacing:.15em;cursor:pointer;
+}
+.btn-primary{
+border:none;
+background:linear-gradient(180deg, var(--gold-pale), var(--gold) 60%, var(--gold-deep));
+color:var(--ink);
+}
+.btn-ghost{
+background:transparent;border:1px solid var(--gold-deep);color:var(--gold-pale);
+}
+
+@media (prefers-reduced-motion: reduce){
+.overlay,.modal{transition:none}
+}
+</style>
+
+</head>
+<body><header>
+<div class="eyebrow">股票社群 · 每日好禮</div>
+<h1>幸運轉盤 · 抽好禮</h1>
+<div class="divider" aria-hidden="true"><span></span></div>
+</header><main class="stage">
+<div class="wheel-wrap">
+<div class="rim" aria-hidden="true"></div>
+<svg id="wheel" viewBox="0 0 400 400" role="img" aria-label="抽獎轉盤">
+<g id="wheelInner"></g>
+</svg>
+<div class="pointer" aria-hidden="true"></div>
+<button class="hub" id="hubBtn" aria-label="開始抽獎">
+<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+開始
+</button>
+</div>
+</main><div class="cta">
+<button class="spin-btn" id="spinBtn">開始抽獎</button>
+<div class="hint">每人每日 1 次 · 好禮大放送</div>
+</div><div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="prizeName">
+<div class="modal">
+<svg class="badge" viewBox="0 0 64 64" aria-hidden="true">
+<circle cx="32" cy="32" r="30" fill="none" stroke="#e8c15a" stroke-width="2"/>
+<path d="M32 14 L37 26 L50 27 L40 36 L43 49 L32 42 L21 49 L24 36 L14 27 L27 26 Z" fill="#e8c15a"/>
+</svg>
+<h2 id="modalTitle">恭喜中獎</h2>
+<div class="prize" id="prizeName">—</div>
+<div class="prize-sub" id="prizeSub">獎項將於活動結束後統一發放</div>
+<div class="modal-actions">
+<button class="btn-primary" id="closeBtn">收下</button>
+</div>
+</div>
+</div><script>
+/* ============================================================
+*  獎項配置區 —— 非技術人員只需改這裡
+*  name  : 獎項名稱（繁體中文）
+*  weight: 中獎權重（數字越大越容易中）
+*  color : （選填）扇區底色，留空自動配色
+* ============================================================ */
+const DEBUG_FIXED_INDEX = 2; // 設為數字（如 0）可強制抽到該索引獎項，控場測試用
+
+const PRIZES = [
+{ name: "謝謝參加",       weight: 1 },
+{ name: "再來一次",       weight: 1 },
+{ name: "史努比玩偶",     weight: 1 },
+{ name: "社區免費3個月",  weight: 1 },
+{ name: "史努比鑰匙扣",   weight: 1 },
+{ name: "史努比手機殼",   weight: 1 },
+];
+/* ============================================================ */
+
+const SVG_NS = "http://www.w3.org/2000/svg";
+const CX = 200, CY = 200, R = 196;
+const wheelInner = document.getElementById("wheelInner");
+const spinBtn = document.getElementById("spinBtn");
+const hubBtn = document.getElementById("hubBtn");
+const overlay = document.getElementById("overlay");
+const prizeName = document.getElementById("prizeName");
+const prizeSub = document.getElementById("prizeSub");
+const modalTitle = document.getElementById("modalTitle");
+
+const FALLBACK_COLORS = ["#8a1f24","#b8860b","#7a1820","#c9a227","#a3322f","#5c1419","#d4af37"];
+
+let currentRotation = 0;   // 目前轉盤角度（度，順時針）
+let spinning = false;
+let drawn = false;          // 每人限抽一次：抽過後永久鎖定
+
+/* ---------- 依設定動態繪製轉盤 ---------- */
+function deg2rad(d){ return d * Math.PI / 180; }
+function polar(angleDeg, radius){
+// angleDeg: 從 12 點鐘方向順時針起算
+const a = deg2rad(angleDeg);
+return [CX + radius * Math.sin(a), CY - radius * Math.cos(a)];
+}
+
+function buildWheel(){
+wheelInner.innerHTML = "";
+const n = PRIZES.length;
+const wedge = 360 / n;
+
+for(let i = 0; i < n; i++){
+const start = i * wedge;
+const end = start + wedge;
+const [x1,y1] = polar(start, R);
+const [x2,y2] = polar(end, R);
+const color = PRIZES[i].color || FALLBACK_COLORS[i % FALLBACK_COLORS.length];
+
+const path = document.createElementNS(SVG_NS, "path");
+path.setAttribute("d",
+`M ${CX} ${CY} L ${x1.toFixed(2)} ${y1.toFixed(2)} A ${R} ${R} 0 0 1 ${x2.toFixed(2)} ${y2.toFixed(2)} Z`);
+path.setAttribute("fill", color);
+path.setAttribute("stroke", "#2a070b");
+path.setAttribute("stroke-width", "2");
+wheelInner.appendChild(path);
+
+// 文字：沿扇區中心徑向排列；下半圓扇區翻轉 180° 讓文字正立可讀
+const center = start + wedge / 2;
+const [tx,ty] = polar(center, R * 0.66);
+let textRot = center;
+const norm = ((center % 360) + 360) % 360;
+if(norm > 90 && norm < 270) textRot = center + 180;
+const text = document.createElementNS(SVG_NS, "text");
+text.setAttribute("x", tx.toFixed(2));
+text.setAttribute("y", ty.toFixed(2));
+text.setAttribute("text-anchor","middle");
+text.setAttribute("dominant-baseline","middle");
+text.setAttribute("fill","#f7ecd7");
+text.setAttribute("font-size", wedge < 45 ? "13" : "15");
+text.setAttribute("font-weight","700");
+text.setAttribute("letter-spacing","2");
+text.setAttribute("transform", `rotate(${textRot.toFixed(2)} ${tx.toFixed(2)} ${ty.toFixed(2)})`);
+text.textContent = PRIZES[i].name;
+wheelInner.appendChild(text);
+
+// 扇區間小金點
+const [dx,dy] = polar(start, R - 6);
+const dot = document.createElementNS(SVG_NS, "circle");
+dot.setAttribute("cx", dx.toFixed(2)); dot.setAttribute("cy", dy.toFixed(2));
+dot.setAttribute("r","2.5"); dot.setAttribute("fill","#e8c15a");
+wheelInner.appendChild(dot);
+}
+}
+
+/* ---------- 加權隨機抽獎 ---------- */
+function pickIndex(){
+if(typeof DEBUG_FIXED_INDEX === "number" && DEBUG_FIXED_INDEX >= 0 && DEBUG_FIXED_INDEX < PRIZES.length){
+return DEBUG_FIXED_INDEX;
+}
+const total = PRIZES.reduce((s,p)=>s + p.weight, 0);
+let r = Math.random() * total;
+for(let i = 0; i < PRIZES.length; i++){
+r -= PRIZES[i].weight;
+if(r < 0) return i;
+}
+return PRIZES.length - 1;
+}
+
+/* ---------- 旋轉動畫：加速 → 等速 → 減速 ---------- */
+const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function spin(){
+if(spinning || drawn) return;
+spinning = true;
+setButtonsDisabled(true);
+overlay.classList.remove("show");
+
+const idx = pickIndex();
+const n = PRIZES.length;
+const wedge = 360 / n;
+// 該扇區中心在轉盤局部座標（從 12 點順時針）
+const centerAngle = idx * wedge + wedge / 2;
+// 在扇區內留 18% 邊界，避免指針壓線
+const margin = wedge * 0.18;
+const jitter = (Math.random() * 2 - 1) * (wedge/2 - margin);
+const targetLocal = centerAngle + jitter;
+
+// 最終要讓 targetLocal 轉到 12 點方向（0°）：currentRotation 改變量 = -targetLocal - currentRotation (mod 360)
+const extraTurns = 5 + Math.floor(Math.random() * 3); // 5~7 圈
+const currentMod = ((currentRotation % 360) + 360) % 360;
+let delta = (360 - targetLocal - currentMod) + extraTurns * 360;
+if(delta < 360) delta += 360;
+const finalRotation = currentRotation + delta;
+
+if(reducedMotion){
+currentRotation = finalRotation;
+wheelInner.parentNode.style.transform = `rotate(${finalRotation}deg)`;
+showResult(idx);
+return;
+}
+
+/* 速度曲線：T=5.2s；0~1.0s 加速、1.0~3.2s 等速、3.2~5.2s 減速 */
+const T = 5200, t1 = 1000, t2 = 3200;
+const d1 = t2 - t1;                 // 等速段時長
+const d2 = T - t2;                  // 減速段時長
+// 解 vmax，使總行進角度 = delta
+// 加速段積分(二次 ramp v=vmax*(t/t1)^2): vmax * t1/3
+// 等速段: vmax * d1
+// 減速段 v = vmax*(1-(u/d2)^2): vmax*(d2 - d2/3) = vmax*2*d2/3
+const vmax = delta / (t1/3 + d1 + 2*d2/3);
+const start = performance.now();
+
+function frame(now){
+let t = now - start;
+if(t > T) t = T;
+let dist;
+if(t <= t1){
+dist = vmax * (t*t*t) / (3 * t1 * t1);
+}else if(t <= t2){
+dist = vmax * t1/3 + vmax * (t - t1);
+}else{
+const u = t - t2;
+dist = vmax * (t1/3 + d1) + vmax * (u - (u*u*u)/(3*d2*d2));
+}
+const rot = currentRotation + dist;
+wheelInner.parentNode.style.transform = `rotate(${rot}deg)`;
+if(t < T){
+requestAnimationFrame(frame);
+}else{
+currentRotation = finalRotation;
+showResult(idx);
+}
+}
+requestAnimationFrame(frame);
+}
+
+function setButtonsDisabled(dis){
+spinBtn.disabled = dis;
+hubBtn.disabled = dis;
+}
+
+/* ---------- 結果 ---------- */
+function showResult(idx){
+spinning = false;
+drawn = true;
+setButtonsDisabled(true);
+spinBtn.textContent = "已抽過 · 每人限抽一次";
+document.querySelector(".hint").textContent = "感謝參與 · 每人限抽一次";
+const prize = PRIZES[idx];
+prizeName.textContent = prize.name;
+const isThanks = prize.name.indexOf("謝謝") >= 0;
+modalTitle.textContent = isThanks ? "下次再來" : "恭喜中獎";
+prizeSub.textContent = isThanks ? "別氣餒，下次再來" : "獎項將於活動結束後統一發放";
+overlay.classList.add("show");
+}
+
+function closeModal(){
+overlay.classList.remove("show");
+}
+
+spinBtn.addEventListener("click", spin);
+hubBtn.addEventListener("click", spin);
+document.getElementById("closeBtn").addEventListener("click", closeModal);
+overlay.addEventListener("click", (e)=>{ if(e.target === overlay) closeModal(); });
+
+/* ---------- 初始化 ---------- */
+buildWheel();
+</script></body>
+</html>
